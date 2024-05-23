@@ -34,7 +34,7 @@
                 <div class="container">
                     <img src="Images/index1.png" alt="index">
                     <div class="btn-container">
-                        <a href="products.html"><button class="btn">Shop Now</button></a>
+                        <button class="btn"><a href="products.html">Shop Now</a></button>
                     </div>
                 </div>
             </section>
@@ -59,99 +59,5 @@
         </div>
         <p>&copy; 2010-2024 Corsair Memory, Inc.</p>
     </footer>
-
-    <!-- Cart Icon -->
-    <div class="cart-icon">
-        <i class="fas fa-shopping-cart"></i>
-        <span id="cart-count">0</span>
-    </div>
-
-    <!-- Cart Modal -->
-    <div class="cart-modal" id="cart-modal">
-        <div class="cart-modal-content">
-            <span class="close" id="close-modal">&times;</span>
-            <div class="cart-header">
-                <div>Product</div>
-                <div>Price</div>
-                <div>Quantity</div>
-                <div>Total</div>
-            </div>
-            <div class="cart-item">
-                <div>Sample Product</div>
-                <div>$99.99</div>
-                <div>1</div>
-                <div>$99.99</div>
-            </div>
-            <button>Checkout</button>
-        </div>
-    </div>
-
-    <script>
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-        function addToCart(name, price, audioId) {
-            let item = cart.find(item => item.name === name);
-            if (item) {
-                item.quantity++;
-                item.subtotal = item.quantity * price;
-            } else {
-                cart.push({ name, price, quantity: 1, subtotal: price });
-            }
-            localStorage.setItem('cart', JSON.stringify(cart));
-            document.getElementById(audioId).play();
-            updateCartCount();
-            alert(name + ' has been added to your cart!');
-        }
-
-        function updateCartCount() {
-            document.getElementById('cart-count').innerText = cart.reduce((total, item) => total + item.quantity, 0);
-        }
-
-        function searchProducts() {
-            const query = document.getElementById('search-bar').value.toLowerCase();
-            const products = document.querySelectorAll('.product');
-            products.forEach(product => {
-                const name = product.getAttribute('data-name').toLowerCase();
-                if (name.includes(query)) {
-                    product.style.display = 'block';
-                } else {
-                    product.style.display = 'none';
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', updateCartCount);
-
-        function toggleCartModal() {
-            const modal = document.getElementById('cart-modal');
-            if (modal.style.display === "block") {
-                modal.style.display = "none";
-            } else {
-                displayCartItems();
-                modal.style.display = "block";
-            }
-        }
-
-        function displayCartItems() {
-            const cartItemsDiv = document.getElementById('cart-items');
-            const totalPriceSpan = document.getElementById('total-price');
-            cartItemsDiv.innerHTML = '';
-            let totalPrice = 0;
-
-            cart.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.classList.add('cart-item');
-                itemDiv.innerHTML = `<div>${item.name}</div><div>${item.quantity}</div><div>$${item.subtotal.toFixed(2)}</div>`;
-                cartItemsDiv.appendChild(itemDiv);
-                totalPrice += item.subtotal;
-            });
-
-            totalPriceSpan.innerText = totalPrice.toFixed(2);
-        }
-
-        function proceedToCheckout() {
-            window.location.href = 'checkout.html';
-        }
-    </script>
 </body>
 </html>
