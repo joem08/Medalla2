@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="Images/S_LOGO.png" class="logo" alt="logo"></a>
+        <h1>SCUFLEX PS5 CONTROLLERS</h1>
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <h2>Your Cart</h2>
+        <div id="cart-items"></div>
+        <p>Total: $<span id="total-price">0.00</span></p>
+        <button onclick="checkout()" style="margin-top: 250px;">Checkout</button>
+    </div>
+    <footer style="margin-top: 500px;">
+        <div class="footer-content">
+            <a href="https://www.facebook.com/ScufGaming/" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/scufgaming/" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="https://twitter.com/scufgaming/" class="social-icon"><i class="fab fa-twitter"></i></a>
+        </div>
+        <p>&copy; 2010-2024 Corsair Memory, Inc.</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cartItemsDiv = document.getElementById('cart-items');
+            const totalPriceSpan = document.getElementById('total-price');
+            let totalPrice = 0;
+
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('cart-item');
+                itemDiv.innerHTML = `<h3>${item.name}</h3><p>$${item.price.toFixed(2)}</p>`;
+                cartItemsDiv.appendChild(itemDiv);
+                totalPrice += item.price;
+            });
+
+            totalPriceSpan.innerText = totalPrice.toFixed(2);
+        });
+
+        function checkout() {
+            alert('Checkout complete!');
+            localStorage.removeItem('cart');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

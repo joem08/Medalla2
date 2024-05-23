@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮Scuflex-Products</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="Images/S_LOGO.png" class="logo" alt="logo">
+        </a>
+        <h1>SCUFLEX PS5 CONTROLLERS</h1>
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </nav>
+        <form class="search-form" onsubmit="event.preventDefault(); searchProducts();">
+            <input type="text" id="search-bar" placeholder="Search..." name="search">
+            <button type="submit">Search</button>
+        </form>
+    </header>
+    <div class="container">
+        <h2>Our Products</h2>
+        <div id="product-list">
+            <div class="product" data-name="Reflex" data-price="199.99">
+                <img src="Images/reflex.png" alt="Reflex">
+                <h3>Reflex</h3>
+                <p>$199.99</p>
+                <audio id="audio-reflex" src="Images/chaching.mp3" type="audio/mpeg"></audio>
+                <button onclick="addToCart('Reflex', 199.99, 'audio-reflex')">Add to Cart</button>
+            </div>
+            <div class="product" data-name="Reflex Pro" data-price="219.99">
+                <img src="Images/reflex_pro.png" alt="Reflex Pro">
+                <h3>Reflex Pro</h3>
+                <p>$219.99</p>
+                <audio id="audio-reflex-pro" src="Images/chaching.mp3" type="audio/mpeg"></audio>
+                <button onclick="addToCart('Reflex Pro', 219.99, 'audio-reflex-pro')">Add to Cart</button>
+            </div>
+            <div class="product" data-name="Reflex FPS" data-price="249.99">
+                <img src="Images/reflex_fps.png" alt="Reflex FPS">
+                <h3>Reflex FPS</h3>
+                <p>$249.99</p>
+                <audio id="audio-reflex-fps" src="Images/chaching.mp3" type="audio/mpeg"></audio>
+                <button onclick="addToCart('Reflex FPS', 249.99, 'audio-reflex-fps')">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+    <iframe name="sound_frame" style="display: none;"></iframe>
+    <!-- Cart Icon -->
+    <div class="cart-icon" onclick="toggleCartModal()">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-count">0</span>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="cart-modal">
+        <div class="cart-modal-content">
+            <span class="close" onclick="toggleCartModal()">&times;</span>
+            <h2>Your Cart</h2>
+            <div class="cart-header">
+                <div>Item Name</div>
+                <div style="margin-right: -40px;">Quantity</div>
+                <div style="margin-right: 50px;">Subtotal</div>
+            </div>
+            <div id="cart-items"></div>
+            <p>Total: $<span id="total-price">0.00</span></p>
+            <button onclick="proceedToCheckout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <a href="https://www.facebook.com/ScufGaming/" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/scufgaming/" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="https://twitter.com/scufgaming/" class="social-icon"><i class="fab fa-twitter"></i></a>
+        </div>
+        <p>&copy; 2010-2024 Corsair Memory, Inc.</p>
+    </footer>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function addToCart(name, price, audioId) {
+            let item = cart.find(item => item.name === name);
+            if (item) {
+                item.quantity++;
+                item.subtotal = item.quantity * price;
+            } else {
+                cart.push({ name, price, quantity: 1, subtotal: price });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            document.getElementById(audioId).play();
+            updateCartCount();
+            alert(name + ' has been added to your cart!');
+        }
+
+        function updateCartCount() {
+            document.getElementById('cart-count').innerText = cart.reduce((total, item) => total + item.quantity, 0);
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const products = document.querySelectorAll('.product');
+            products.forEach(product => {
+                const name = product.getAttribute('data-name').toLowerCase();
+                if (name.includes(query)) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', updateCartCount);
+
+        function toggleCartModal() {
+            const modal = document.getElementById('cart-modal');
+            if (modal.style.display === "block") {
+                modal.style.display = "none";
+            } else {
+                displayCartItems();
+                modal.style.display = "block";
+            }
+        }
+
+        function displayCartItems() {
+            const cartItemsDiv = document.getElementById('cart-items');
+            const totalPriceSpan = document.getElementById('total-price');
+            cartItemsDiv.innerHTML = '';
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('cart-item');
+                itemDiv.innerHTML = `<div>${item.name}</div><div>${item.quantity}</div><div>$${item.subtotal.toFixed(2)}</div>`;
+                cartItemsDiv.appendChild(itemDiv);
+                totalPrice += item.subtotal;
+            });
+
+            totalPriceSpan.innerText = totalPrice.toFixed(2);
+        }
+
+        function proceedToCheckout() {
+            window.location.href = 'checkout.html';
+        }
+    </script>
+</body>
+</html>

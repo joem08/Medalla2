@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮Scuflex-Index</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <a href="index.html">
+            <img src="Images/S_LOGO.png" alt="logo" class="logo">
+        </a>
+        <h1 style="padding: 30px;">SCUFLEX PS5 CONTROLLERS</h1>
+
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="checkout.html">View Cart (<span id="cart-count">0</span>)</a></li>
+        </ul>
+
+    </nav>
+
+    <div class="main-content">
+        <div class="left-column">
+            <section>
+                <div class="container">
+                    <img src="Images/index1.png" alt="index">
+                    <div class="btn-container">
+                        <a href="products.html"><button class="btn">Shop Now</button></a>
+                    </div>
+                </div>
+            </section>
+
+            <article>
+                <h2>Latest News</h2>
+                <p>Check out our latest products and updates!</p>
+            </article>
+        </div>
+
+        <aside>
+            <h2>Special Offers</h2>
+            <p>Get 20% off on your first purchase!</p>
+        </aside>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <a href="https://www.facebook.com/ScufGaming/" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/scufgaming/" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="https://twitter.com/scufgaming/" class="social-icon"><i class="fab fa-twitter"></i></a>
+        </div>
+        <p>&copy; 2010-2024 Corsair Memory, Inc.</p>
+    </footer>
+
+    <!-- Cart Icon -->
+    <div class="cart-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-count">0</span>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cart-modal">
+        <div class="cart-modal-content">
+            <span class="close" id="close-modal">&times;</span>
+            <div class="cart-header">
+                <div>Product</div>
+                <div>Price</div>
+                <div>Quantity</div>
+                <div>Total</div>
+            </div>
+            <div class="cart-item">
+                <div>Sample Product</div>
+                <div>$99.99</div>
+                <div>1</div>
+                <div>$99.99</div>
+            </div>
+            <button>Checkout</button>
+        </div>
+    </div>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function addToCart(name, price, audioId) {
+            let item = cart.find(item => item.name === name);
+            if (item) {
+                item.quantity++;
+                item.subtotal = item.quantity * price;
+            } else {
+                cart.push({ name, price, quantity: 1, subtotal: price });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            document.getElementById(audioId).play();
+            updateCartCount();
+            alert(name + ' has been added to your cart!');
+        }
+
+        function updateCartCount() {
+            document.getElementById('cart-count').innerText = cart.reduce((total, item) => total + item.quantity, 0);
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const products = document.querySelectorAll('.product');
+            products.forEach(product => {
+                const name = product.getAttribute('data-name').toLowerCase();
+                if (name.includes(query)) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', updateCartCount);
+
+        function toggleCartModal() {
+            const modal = document.getElementById('cart-modal');
+            if (modal.style.display === "block") {
+                modal.style.display = "none";
+            } else {
+                displayCartItems();
+                modal.style.display = "block";
+            }
+        }
+
+        function displayCartItems() {
+            const cartItemsDiv = document.getElementById('cart-items');
+            const totalPriceSpan = document.getElementById('total-price');
+            cartItemsDiv.innerHTML = '';
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('cart-item');
+                itemDiv.innerHTML = `<div>${item.name}</div><div>${item.quantity}</div><div>$${item.subtotal.toFixed(2)}</div>`;
+                cartItemsDiv.appendChild(itemDiv);
+                totalPrice += item.subtotal;
+            });
+
+            totalPriceSpan.innerText = totalPrice.toFixed(2);
+        }
+
+        function proceedToCheckout() {
+            window.location.href = 'checkout.html';
+        }
+    </script>
+</body>
+</html>
